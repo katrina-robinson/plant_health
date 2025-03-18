@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h2 class="text-center text-success">Upload Plant Image</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Select an Image:</label>
+                    {{ form.image }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Plant Name:</label>
+                    {{ form.plant_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Sunlight Per Day (Hours):</label>
+                    {{ form.sunlight_hours }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Location:</label>
+                    {{ form.location }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Month:</label>
+                    {{ form.month }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Watering Frequency:</label>
+                    {{ form.watering_frequency }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Additional Comments:</label>
+                    {{ form.additional_comments }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Analyze Plant</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

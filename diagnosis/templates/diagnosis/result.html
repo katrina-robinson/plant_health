@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="text-center text-success">Plant Diagnosis Results</h2>
+            <div class="text-center">
+                <img src="{{ diagnosis.image.url }}" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+            </div>
+            <hr>
+            <p><strong>✅ Health Status:</strong> {{ diagnosis.health_status }}</p>
+            <p><strong>⚠️ Possible Cause:</strong> {{ diagnosis.possible_cause }}</p>
+            <p><strong>💡 Treatment Recommendation:</strong> {{ diagnosis.treatment_recommendation }}</p>
+            <a href="/" class="btn btn-success w-100 mt-3">Analyze Another Plant</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

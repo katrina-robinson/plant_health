@@ -1,0 +1,15 @@
+# Virtual environment
+venv/
+__pycache__/
+
+# Database files
+*.sqlite3
+
+# AWS & secret files
+.env
+*.pem  # AWS SSH Key
+secrets.json
+
+# Static & media files
+staticfiles/
+media/
