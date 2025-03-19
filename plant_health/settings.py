@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-o_sy#%or)@*kg^1=%wqy)=zq#@na$^t^8llx$dbr#@5)7omake
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["planthealthclinic.com", "www.planthealthclinic.com", "54.253.243.128", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -46,7 +46,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Allowed hosts for development
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+#ALLOWED_HOSTS = ["127.0.0.1", "localhost, 3.107.104.6"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -125,7 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
