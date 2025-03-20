@@ -4,20 +4,16 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card p-4">
-            <h2 class="text-center text-success">Upload Plant Image</h2>
+            <h1 class="text-center text-success">Welcome to Plant Health Clinic 🌱</h1>
+            <p class="text-center">
+                Upload an image of your plant, and our AI will analyze it to detect potential diseases 
+                and suggest care tips.
+            </p>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label class="form-label">Select an Image:</label>
                     {{ form.image }}
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Plant Name:</label>
-                    {{ form.plant_name }}
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Sunlight Per Day (Hours):</label>
-                    {{ form.sunlight_hours }}
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Location:</label>
@@ -28,17 +24,54 @@
                     {{ form.month }}
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Position:</label>
+                    {{ form.sunlight_info }}
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Watering Frequency:</label>
                     {{ form.watering_frequency }}
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Additional Comments:</label>
+                    <label class="form-label"><i class="fas fa-comment"></i> Additional Comments:</label>
                     {{ form.additional_comments }}
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Analyze Plant</button>
+                <button type="submit" class="btn btn-primary w-100" id="submit-btn">
+                    Analyze Plant
+                </button>
+                <div id="loading" style="display: none; text-align: center; margin-top: 10px;">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Processing...</span>
+                    </div>
+                    <p>Analyzing the plant... Please wait.</p>
+                </div>
+                
             </form>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="mt-4 p-4 text-center">
+            <h3>How It Works</h3>
+            <ul class="list-unstyled">
+                <li>📸 <b>Step 1:</b> Upload an image of your plant.</li>
+                <li>🤖 <b>Step 2:</b> Our AI will analyze the image for diseases.</li>
+                <li>📊 <b>Step 3:</b> Receive a diagnosis and plant care tips instantly!</li>
+            </ul>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const submitButton = document.getElementById("submit-btn");
+        const loadingDiv = document.getElementById("loading");
+
+        form.addEventListener("submit", function () {
+            // Hide the submit button and show the loading spinner
+            submitButton.style.display = "none";
+            loadingDiv.style.display = "block";
+        });
+    });
+</script>
 
 {% endblock %}

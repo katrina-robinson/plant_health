@@ -10,20 +10,33 @@ MONTH_CHOICES = [
 ]
 
 WATERING_CHOICES = [
-    ('Daily', 'Daily'), ('Every 2-3 days', 'Every 2-3 days'), ('Every 4-5 days', 'Every 4-5 days'),
+    ('Unknown', 'Unknown'), ('Daily', 'Daily'), ('Every 2-3 days', 'Every 2-3 days'), ('Every 4-5 days', 'Every 4-5 days'),
     ('Weekly', 'Weekly'), ('Every 1-2 weeks', 'Every 1-2 weeks'), ('Rarely', 'Rarely')
 ]
 
+SUNLIGHT_CHOICES = [
+    ('Full Sun', 'Full Sun'), ('Part sun part shade', 'Part sun part shade'), ('Full shade', 'Full shade'), ('Indoors', 'Indoors'),
+    ('Unknown', 'Unknown')
+]
+
 class PlantDiagnosisForm(forms.ModelForm):
-    sunlight_hours = forms.ChoiceField(
-        choices=[(str(i), f"{i} hours") for i in range(0, 13)],  # 0 to 12 hours
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
 
     month = forms.ChoiceField(
         choices=MONTH_CHOICES,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
+    additional_comments = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'cols': 40, 'class': 'form-control', 'placeholder': 'Optional extra context'}),
+        required=False
+    )
+
+    # plant_name = forms.CharField(
+    #     widget=forms.Textarea(attrs={'rows': 1, 'cols': 30, 'class': 'form-control', 'placeholder': 'Leave blank if unknown'}),
+    #     required=False
+    # )
+
+
 
     watering_frequency = forms.ChoiceField(
         choices=WATERING_CHOICES,
@@ -34,9 +47,10 @@ class PlantDiagnosisForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your city, region, or country'})
     )
 
-    # image_name = forms.CharField(
-    #     widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter a name for the image'})
-    # )
+    sunlight_info = forms.ChoiceField(
+        choices=SUNLIGHT_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
 
     class Meta:
         model = PlantDiagnosis

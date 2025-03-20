@@ -17,15 +17,16 @@ def diagnose_plant(request):
             print(f"Image uploaded successfully: {diagnosis.image.path}")
 
             plant_data = f"""
-                I have a {diagnosis.plant_name} plant. It receives {diagnosis.sunlight_hours} hours of sunlight per day.
-                The plant is located in {diagnosis.location} (time of year = {diagnosis.month}) and is watered {diagnosis.watering_frequency}.
-                Additional notes: {diagnosis.additional_comments}. Base your response mostly on your analysis of the image.
+                Identify and analyse the plant in the image.
+                The plant is located in {diagnosis.location} (position = {diagnosis.sunlight_info}, time of year = {diagnosis.month}) and is watered {diagnosis.watering_frequency}.
+                Additional notes: {diagnosis.additional_comments}. Prioritise the image over the prior information I gave you in your response. If there is no plant in the image, let the user know.
 
                 **IMPORTANT:** Respond in the following JSON format ONLY (no extra text):
                 {{
                     "health_status": "Healthy" or "Unhealthy",
                     "possible_cause": "explanation of the cause if plant is unhealthy",
-                    "treatment_recommendation": "Recommended steps to fix the issue"
+                    "treatment_recommendation": "Recommended steps to fix the issue",
+                    "plant_species": "identify plant species based on image",
                 }}
             """
 
@@ -42,7 +43,8 @@ def diagnose_plant(request):
                 # Save AI response in database
                 diagnosis.health_status = ai_response.get("health_status", "Unknown")
                 diagnosis.possible_cause = ai_response.get("possible_cause", "No cause identified")
-                diagnosis.treatment_recommendation = ai_response.get("treatment_recommendation", "No recommendation available")
+                diagnosis.treatment_recommendation = ai_response.get("treatment_recommendation", "Unknown")
+                diagnosis.plant_species = ai_response.get("plant_species", "Species not identified")
                 diagnosis.save()
 
                 return render(request, "diagnosis/result.html", {"diagnosis": diagnosis})

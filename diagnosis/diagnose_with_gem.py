@@ -109,7 +109,8 @@ def get_gem_response(message_content: str, file_attached: str = None) -> dict:
                 return {
                     "health_status": "Unknown",
                     "possible_cause": "Error parsing response",
-                    "treatment_recommendation": "Try again later"
+                    "treatment_recommendation": "Try again later",
+                    "plant_species": "Unknown"
                 }
 
         except retryable_exceptions:
