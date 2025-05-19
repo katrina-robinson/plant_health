@@ -12,12 +12,19 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label">Select an Image:</label>
-                    {{ form.image }}
+                    <label class="form-label">Select or Drag & Drop an Image:</label>
+                    <div id="drop-zone" class="border border-secondary rounded p-4 text-center" style="cursor: pointer;">
+                        <p id="drop-zone-text">Drop image here or click to select</p>
+                        {{ form.image }}
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Location:</label>
-                    {{ form.location }}
+                    <div class="input-group">
+                        {{ form.location }}
+                        <button class="btn btn-outline-secondary" type="button" id="get-location-btn">Use Current Location</button>
+                    </div>
+                    <small id="location-status" class="text-muted"></small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Month:</label>
@@ -61,17 +68,99 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-        const submitButton = document.getElementById("submit-btn");
-        const loadingDiv = document.getElementById("loading");
+document.addEventListener("DOMContentLoaded", function () {
+    const locationInput = document.getElementById("location-input");
+    const button = document.getElementById("get-location-btn");
+    const status = document.getElementById("location-status");
 
-        form.addEventListener("submit", function () {
-            // Hide the submit button and show the loading spinner
-            submitButton.style.display = "none";
-            loadingDiv.style.display = "block";
-        });
+    button.addEventListener("click", () => {
+        status.textContent = "Detecting location...";
+        button.disabled = true;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            const address = data.address || {};
+                            const city = address.city || address.town || address.village || '';
+                            const state = address.state || '';
+                            const country = address.country || '';
+                            const formatted = [city, state, country].filter(Boolean).join(", ");
+                            locationInput.value = formatted;
+                            status.textContent = "Location autofilled";
+                        })
+                        .catch(err => {
+                            console.error("Reverse geocoding error:", err);
+                            status.textContent = "Failed to fetch location";
+                        })
+                        .finally(() => {
+                            button.disabled = false;
+                        });
+                },
+                function (error) {
+                    console.warn("Geolocation error:", error.message);
+                    status.textContent = "Location access denied or unavailable";
+                    button.disabled = false;
+                }
+            );
+        } else {
+            status.textContent = "Geolocation is not supported by this browser.";
+            button.disabled = false;
+        }
     });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = dropZone.querySelector("input[type='file']");
+    const dropText = document.getElementById("drop-zone-text");
+
+    // Hide the file input but keep it accessible
+    fileInput.style.display = "none";
+
+    // Click on drop zone opens file dialog
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    // Handle drag events
+    dropZone.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropZone.classList.add("bg-light");
+        dropText.innerText = "Release to upload image";
+    });
+
+    dropZone.addEventListener("dragleave", e => {
+        e.preventDefault();
+        dropZone.classList.remove("bg-light");
+        dropText.innerText = "Drop image here or click to select";
+    });
+
+    dropZone.addEventListener("drop", e => {
+        e.preventDefault();
+        dropZone.classList.remove("bg-light");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            dropText.innerText = `Selected: ${files[0].name}`;
+        }
+    });
+
+    // Update text when user selects file via dialog
+    fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+            dropText.innerText = `Selected: ${fileInput.files[0].name}`;
+        }
+    });
+});
 </script>
 
+    
+    
+    
 {% endblock %}

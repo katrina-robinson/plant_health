@@ -1,5 +1,6 @@
 from django import forms
 from .models import PlantDiagnosis
+from datetime import datetime
 
 # Dropdown options
 MONTH_CHOICES = [
@@ -23,19 +24,14 @@ class PlantDiagnosisForm(forms.ModelForm):
 
     month = forms.ChoiceField(
         choices=MONTH_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+	initial=datetime.now().strftime('%B')
     )
 
     additional_comments = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3, 'cols': 40, 'class': 'form-control', 'placeholder': 'Optional extra context'}),
         required=False
     )
-
-    # plant_name = forms.CharField(
-    #     widget=forms.Textarea(attrs={'rows': 1, 'cols': 30, 'class': 'form-control', 'placeholder': 'Leave blank if unknown'}),
-    #     required=False
-    # )
-
 
 
     watering_frequency = forms.ChoiceField(
@@ -44,8 +40,14 @@ class PlantDiagnosisForm(forms.ModelForm):
     )
 
     location = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your city, region, or country'})
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Use current location or enter manually',
+            'id': 'location-input'  # required for JS
+        })
     )
+
 
     sunlight_info = forms.ChoiceField(
         choices=SUNLIGHT_CHOICES,

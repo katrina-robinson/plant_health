@@ -11,7 +11,7 @@ class PlantDiagnosis(models.Model):
         ('October', 'October'), ('November', 'November'), ('December', 'December')
     ])
     watering_frequency = models.CharField(max_length=20)
-    location = models.CharField(max_length=100)  # Make location a free text field
+    location = models.CharField(max_length=100, blank=True, null=True)
     additional_comments = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='plant_images/')
 
